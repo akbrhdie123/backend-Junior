@@ -1,5 +1,6 @@
 const http = require("http");
 const { chunk } = require("lodash");
+const { join } = require("path");
 
 const requestListener = (request, response) => {
   response.setHeader("Content-type", "application/json");
@@ -11,12 +12,18 @@ const requestListener = (request, response) => {
     // TODO 2: logika respons bila url bernilai '/'
     if (method === "GET") {
       response.statusCode = 200;
-      response.end("<h1>This Is HomePage!</h1>");
+      response.end(
+        JSON.stringify({
+          message: "This Is HomePage!",
+        })
+      );
     } else {
       response.end;
       response.statusCode = 400;
       response.end(
-        `<h1>The page cannot be accessed with ${method} request</h1>`
+        JSON.stringify({
+          message: `Page cannot be accessed using ${method} request`,
+        })
       );
     }
   } else if (url === "/about") {
@@ -24,7 +31,11 @@ const requestListener = (request, response) => {
     if (method === "GET") {
       // respons bila client menggunakan GET
       response.statusCode = 200;
-      response.end("<h1>Hello! This is the about page.</h1>");
+      response.end(
+        JSON.stringify({
+          message: "This Is About Page!",
+        })
+      );
     } else if (method === "POST") {
       // respons bila client menggunakan POST
       let body = [];
@@ -37,17 +48,29 @@ const requestListener = (request, response) => {
         body = Buffer.concat(body).toString();
         const { name } = JSON.parse(body);
         response.statusCode = 200;
-        response.end(`<h1>Hai, ${name}!</h1>`);
+        response.end(
+          JSON.stringify({
+            message: `Hello ${name}! This Is About Page!`,
+          })
+        );
       });
     } else {
       // respons bila client tidak menggunakan GET ataupun POST
       response.statusCode = 400;
-      response.end(`<h1>Page cannot be accessed using ${method} request</h1>`);
+      response.end(
+        JSON.stringify({
+          message: `Page cannot be accessed using ${method} request!`,
+        })
+      );
     }
   } else {
     // TODO 1: logika respons bila url bukan '/' atau '/about'
     response.statusCode = 404;
-    response.end("<h1>The Page Not Found!</h1>");
+    response.end(
+      JSON.stringify({
+        message: "The page not found!",
+      })
+    );
   }
 };
 
